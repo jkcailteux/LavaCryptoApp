@@ -1,4 +1,4 @@
-import { RawColors } from "@/constants/RawColors";
+import { DarkTheme } from "@/themes/Themes";
 import { Cryptocoin } from "@/types/CryptoTypes";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -6,8 +6,8 @@ const styles = StyleSheet.create({
     container: {
         padding: 12,
         borderBottomWidth: 1,
-        borderBottomColor: RawColors.Dark3,
-        backgroundColor: RawColors.Dark2,
+        borderBottomColor: DarkTheme.colors.border,
+        backgroundColor: DarkTheme.colors.card,
         marginHorizontal: 12,
         marginVertical: 4,
         borderRadius: 8,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         marginRight: 8
     },
     headerText: {
-        color: RawColors.White,
+        color: DarkTheme.colors.text,
         fontSize: 16,
         fontWeight: 'bold'
     },

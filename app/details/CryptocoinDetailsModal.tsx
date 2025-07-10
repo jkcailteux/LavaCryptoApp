@@ -1,12 +1,11 @@
-import { RawColors } from "@/constants/RawColors";
 import { Cryptocoin } from "@/types/CryptoTypes";
+import { DarkTheme } from "@react-navigation/native";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: RawColors.Dark1,
+        backgroundColor: DarkTheme.colors.card,
         paddingTop: 8,
     },
     header: {
@@ -14,7 +13,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
         borderBottomWidth: 1,
-        borderBottomColor: RawColors.Dark3,
+        borderBottomColor: DarkTheme.colors.border,
     },
     coinLogo: {
         width: 48,
@@ -26,13 +25,13 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     coinName: {
-        color: RawColors.White,
+        color: DarkTheme.colors.text,
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 4,
     },
     coinSymbol: {
-        color: RawColors.Dark6,
+        color: DarkTheme.colors.text,
         fontSize: 16,
     },
     content: {
@@ -46,24 +45,24 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 12,
         borderBottomWidth: 1,
-        borderBottomColor: RawColors.Dark3,
+        borderBottomColor: DarkTheme.colors.border,
     },
     detailLabel: {
-        color: RawColors.Dark8,
+        color: DarkTheme.colors.text,
         fontSize: 16,
     },
     detailValue: {
-        color: RawColors.White,
+        color: DarkTheme.colors.text,
         fontSize: 16,
     },
     priceSection: {
         marginBottom: 30,
         padding: 20,
         borderBottomWidth: 2,
-        borderBottomColor: RawColors.Dark3,
+        borderBottomColor: DarkTheme.colors.border,
     },
     currentPrice: {
-        color: RawColors.White,
+        color: DarkTheme.colors.text,
         fontSize: 36,
         fontWeight: 'bold',
         marginBottom: 8,
@@ -73,7 +72,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     sectionTitle: {
-        color: RawColors.White,
+        color: DarkTheme.colors.text,
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 16,
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         flex: 1,
-        backgroundColor: RawColors.Dark1,
+        backgroundColor: DarkTheme.colors.background,
     },
     closeButton: {
         position: 'absolute',
@@ -91,12 +90,12 @@ const styles = StyleSheet.create({
         width: 32,
         height: 32,
         borderRadius: 16,
-        backgroundColor: RawColors.Dark3,
+        backgroundColor: DarkTheme.colors.border,
         justifyContent: 'center',
         alignItems: 'center',
     },
     closeButtonText: {
-        color: RawColors.White,
+        color: DarkTheme.colors.text,
         fontSize: 18,
         fontWeight: 'bold',
     }
@@ -122,7 +121,6 @@ export interface CryptocoinDetailsModalProps {
 }
 
 export default function CryptocoinDetailsModal({ coin, onClose }: CryptocoinDetailsModalProps) {
-    const insets = useSafeAreaInsets();
     if (!coin) {
         return null;
     }

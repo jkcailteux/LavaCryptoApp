@@ -2,6 +2,7 @@ import { SimpleCryptocoinView } from "@/components/cryptocoin/SimpleCryptocoinVi
 import { RawColors } from "@/constants/RawColors";
 import { useCryptoStore } from "@/stores/CryptocoinStore";
 import { Cryptocoin } from "@/types/CryptoTypes";
+import { DarkTheme } from "@react-navigation/native";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, FlatList, Modal, RefreshControl, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,10 +11,10 @@ import CryptocoinDetailsModal from "../details/CryptocoinDetailsModal";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: RawColors.Dark1
+    backgroundColor: DarkTheme.colors.background
   },
   title: {
-    color: RawColors.White,
+    color: DarkTheme.colors.text,
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -23,18 +24,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: RawColors.Dark1,
+    backgroundColor: DarkTheme.colors.background,
     margin: 20,
   },
   loadingText: {
-    color: RawColors.White,
+    color: DarkTheme.colors.text,
     marginTop: 10
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: RawColors.Dark1,
+    backgroundColor: DarkTheme.colors.background,
     margin: 20,
   },
   errorText: {
@@ -49,8 +50,8 @@ const styles = StyleSheet.create({
   searchInput: {
     borderRadius: 10,
     padding: 14,
-    backgroundColor: RawColors.Dark4,
-    color: RawColors.White,
+    backgroundColor: DarkTheme.colors.border,
+    color: DarkTheme.colors.text,
     fontSize: 16,
   },
 });
