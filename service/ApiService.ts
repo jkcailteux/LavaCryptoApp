@@ -1,4 +1,5 @@
 import { Cryptocoin } from "@/types/CryptoTypes";
+import { parseCryptocoin } from "@/types/TypeParser";
 
 
 export class ApiService {
@@ -13,20 +14,11 @@ export class ApiService {
         return ApiService.instance;
     }
 
-    public async getCoins(numCoins: number = 50) {
+    public async getCoins(numCoins: number): Promise<Cryptocoin[]> {
         const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${numCoins}&page=1&sparkline=false`);
         if (response.ok) {
             const data = await response.json();
-            return data.map((coin: Cryptocoin) => ({
-                id: coin.id,
-                symbol: coin.symbol,
-                name: coin.name,
-                image: coin.image,
-                current_price: coin.current_price,
-                market_cap_rank: coin.market_cap_rank,
-                total_volume: coin.total_volume,
-                price_change_percentage_24h: coin.price_change_percentage_24h,
-            }));
+            return data.map((coin: any) => parseCryptocoin(coin));
         } else {
             if (response.status === 429) {
                 // TODO lets add retry logic

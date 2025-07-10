@@ -2,6 +2,8 @@ import { ApiService } from '@/service/ApiService';
 import { Cryptocoin } from '@/types/CryptoTypes';
 import { create } from 'zustand';
 
+const CRYPTOCOIN_COUNT = 50;
+
 interface CryptoStore {
     coins: Cryptocoin[];
     isLoading: boolean;
@@ -20,7 +22,7 @@ export const useCryptoStore = create<CryptoStore>((set, get) => ({
     fetchCoins: async () => {
         set({ isLoading: true, error: null });
         try {
-            const coins = await ApiService.getInstance().getCoins();
+            const coins = await ApiService.getInstance().getCoins(CRYPTOCOIN_COUNT);
             set({ coins, isLoading: false });
         } catch (error) {
             set({

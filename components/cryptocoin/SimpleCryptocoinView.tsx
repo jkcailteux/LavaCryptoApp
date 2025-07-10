@@ -1,12 +1,13 @@
+import { RawColors } from "@/constants/RawColors";
 import { Cryptocoin } from "@/types/CryptoTypes";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
         padding: 12,
         borderBottomWidth: 1,
-        borderBottomColor: '#333',
-        backgroundColor: '#2a2a2a',
+        borderBottomColor: RawColors.Dark3,
+        backgroundColor: RawColors.Dark2,
         marginHorizontal: 12,
         marginVertical: 4,
         borderRadius: 8,
@@ -15,45 +16,59 @@ const styles = StyleSheet.create({
         gap: 8
     },
     logoImage: {
-        width: 20,
-        height: 20,
+        width: 30,
+        height: 30,
         borderRadius: 10
     },
-    priceTextContainer: {
+    headerTextContainer: {
         flex: 1,
-        flexDirection: 'column',
-        alignItems: 'flex-end'
+        marginRight: 8
     },
     headerText: {
-        color: 'white',
+        color: RawColors.White,
         fontSize: 16,
         fontWeight: 'bold'
     },
+    priceTextContainer: {
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        minWidth: 80
+    },
     priceText: {
-        fontSize: 18
+        fontSize: 16,
+        fontWeight: 'bold'
     },
     priceChangeText: {
         fontSize: 12
     }
 });
 
-export function SimpleCryptocoinView({ coin }: { coin: Cryptocoin }) {
-    const priceChangeColor = coin.price_change_percentage_24h >= 0 ? 'green' : 'red';
+export interface SimpleCryptocoinViewProps {
+    coin: Cryptocoin;
+    onPress: () => void;
+}
+
+export function SimpleCryptocoinView({ coin, onPress }: SimpleCryptocoinViewProps) {
+    const priceChangeColor = coin.priceChangePercentage24h >= 0 ? 'green' : 'red';
 
     return (
-        <View style={styles.container}>
-            <Image source={{ uri: coin.image }} style={styles.logoImage} />
-            <Text style={styles.headerText}>
-                {coin.name} ({coin.symbol.toUpperCase()})
-            </Text>
-            <View style={styles.priceTextContainer}>
-                <Text style={[styles.priceText, { color: priceChangeColor }]}>
-                    ${coin.current_price?.toLocaleString()}
-                </Text>
-                <Text style={[styles.priceChangeText, { color: priceChangeColor }]}>
-                    {coin.price_change_percentage_24h?.toFixed(2)}% (24h)
-                </Text>
+        <TouchableOpacity onPress={onPress}>
+            <View style={styles.container}>
+                <Image source={{ uri: coin.image }} style={styles.logoImage} />
+                <View style={styles.headerTextContainer}>
+                    <Text style={styles.headerText} numberOfLines={2}>
+                        {coin.name} ({coin.symbol.toUpperCase()})
+                    </Text>
+                </View>
+                <View style={styles.priceTextContainer}>
+                    <Text style={[styles.priceText, { color: priceChangeColor }]}>
+                        ${coin.currentPrice?.toLocaleString()}
+                    </Text>
+                    <Text style={[styles.priceChangeText, { color: priceChangeColor }]}>
+                        {coin.priceChangePercentage24h?.toFixed(2)}% (24h)
+                    </Text>
+                </View>
             </View>
-        </View>
+        </TouchableOpacity >
     );
 };
