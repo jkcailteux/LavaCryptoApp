@@ -1,10 +1,9 @@
 import { SimpleCryptocoinView } from "@/components/cryptocoin/SimpleCryptocoinView";
-import { RawColors } from "@/constants/RawColors";
 import { useCryptoStore } from "@/stores/CryptocoinStore";
 import { Cryptocoin } from "@/types/CryptoTypes";
 import { DarkTheme } from "@react-navigation/native";
 import { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, Modal, RefreshControl, StyleSheet, Text, TextInput, View } from "react-native";
+import { FlatList, Modal, RefreshControl, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CryptocoinDetailsModal from "../details/CryptocoinDetailsModal";
 
@@ -76,16 +75,6 @@ export default function HomeScreen() {
     fetchCoins();
   }, [fetchCoins]);
 
-  let loadingView = null;
-  if (isLoading) {
-    loadingView = (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={RawColors.White} />
-        <Text style={styles.loadingText}>Loading crypto data...</Text>
-      </View>
-    );
-  }
-
   let errorView = null;
   if (error) {
     errorView = (
@@ -116,7 +105,6 @@ export default function HomeScreen() {
       <Text style={styles.title}>
         Crypto Markets
       </Text>
-      {loadingView}
       {errorView}
       <FlatList
         data={filteredCoins}
