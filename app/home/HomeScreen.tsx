@@ -1,8 +1,9 @@
 import { SimpleCryptocoinView } from "@/components/cryptocoin/SimpleCryptocoinView";
+import useDebounce from "@/hooks/useDebounce";
 import { useCryptoStore } from "@/stores/CryptocoinStore";
 import { Cryptocoin } from "@/types/CryptoTypes";
 import { DarkTheme } from "@react-navigation/native";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList, Modal, RefreshControl, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CryptocoinDetailsModal from "../details/CryptocoinDetailsModal";
@@ -57,23 +58,45 @@ const styles = StyleSheet.create({
 
 export default function HomeScreen() {
   const { coins, isLoading, error, fetchCoins } = useCryptoStore();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedCoin, setSelectedCoin] = useState<Cryptocoin | undefined>(undefined);
 
+  const debouncedSearchQuery = useDebounce(searchQuery, 200);
+
   const filteredCoins = useMemo(() => {
-    if (searchQuery.length === 0) {
+    if (debouncedSearchQuery.length === 0) {
       return coins;
     }
     return coins.filter((coin) =>
-      coin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      coin.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+      coin.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+      coin.symbol.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
     );
-  }, [coins, searchQuery]);
+  }, [coins, debouncedSearchQuery]);
 
   useEffect(() => {
     fetchCoins();
+  }, []);
+
+  const renderCoin = useCallback(({ item }: { item: Cryptocoin }) => {
+    return <SimpleCryptocoinView coin={item} onPress={() => {
+      setSelectedCoin(item);
+      setIsModalVisible(true);
+    }} />;
+  }, []);
+
+  const handleRefresh = useCallback(() => {
+    fetchCoins();
   }, [fetchCoins]);
+
+  const handleCloseModal = useCallback(() => {
+    setIsModalVisible(false);
+  }, []);
+
+  const handleSearch = useCallback((text: string) => {
+    setSearchQuery(text);
+  }, []);
 
   let errorView = null;
   if (error) {
@@ -88,17 +111,18 @@ export default function HomeScreen() {
   if (coins.length > 0) {
     searchView = (
       <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search Coins" onChangeText={setSearchQuery} autoFocus={true} clearButtonMode="while-editing" autoCorrect={false} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search Coins"
+          onChangeText={handleSearch}
+          value={searchQuery}
+          autoFocus={true}
+          clearButtonMode="while-editing"
+          autoCorrect={false}
+        />
       </View>
     );
   }
-
-  const renderCoin = ({ item }: { item: Cryptocoin }) => {
-    return <SimpleCryptocoinView coin={item} onPress={() => {
-      setSelectedCoin(item);
-      setIsModalVisible(true);
-    }} />;
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -112,20 +136,20 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={fetchCoins} />
+          <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
         }
         ListHeaderComponent={searchView}
       />
 
       <Modal
         visible={isModalVisible}
-        onRequestClose={() => setIsModalVisible(false)}
+        onRequestClose={handleCloseModal}
         animationType="slide"
         presentationStyle="pageSheet"
       >
         <CryptocoinDetailsModal
           coin={selectedCoin}
-          onClose={() => setIsModalVisible(false)}
+          onClose={handleCloseModal}
         />
       </Modal>
 

@@ -13,6 +13,8 @@ const DEFAULT_RETRY_CONFIG: RetryConfig = {
     maxDelay: 10000,
 };
 
+const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3';
+
 export class ApiService {
     private static instance: ApiService;
     private retryConfig: RetryConfig;
@@ -65,7 +67,7 @@ export class ApiService {
     }
 
     public async getCoins(numCoins: number): Promise<Cryptocoin[]> {
-        const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${numCoins}&page=1&sparkline=false`;
+        const url = `${COINGECKO_API_URL}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${numCoins}&page=1&sparkline=false`;
         const data = await this.makeRequest<any[]>(url);
         return data.map((coin: any) => parseCryptocoin(coin));
     }
