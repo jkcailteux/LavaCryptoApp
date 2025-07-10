@@ -3,7 +3,8 @@ import { RawColors } from "@/constants/RawColors";
 import { useCryptoStore } from "@/stores/CryptocoinStore";
 import { Cryptocoin } from "@/types/CryptoTypes";
 import { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, Modal, RefreshControl, SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, FlatList, Modal, RefreshControl, StyleSheet, Text, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import CryptocoinDetailsModal from "../details/CryptocoinDetailsModal";
 
 const styles = StyleSheet.create({
@@ -110,37 +111,35 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          Crypto Markets
-        </Text>
-        {loadingView}
-        {errorView}
-        <FlatList
-          data={filteredCoins}
-          renderItem={renderCoin}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl refreshing={isLoading} onRefresh={fetchCoins} />
-          }
-          ListHeaderComponent={searchView}
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>
+        Crypto Markets
+      </Text>
+      {loadingView}
+      {errorView}
+      <FlatList
+        data={filteredCoins}
+        renderItem={renderCoin}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={fetchCoins} />
+        }
+        ListHeaderComponent={searchView}
+      />
+
+      <Modal
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}
+        animationType="slide"
+        presentationStyle="pageSheet"
+      >
+        <CryptocoinDetailsModal
+          coin={selectedCoin}
+          onClose={() => setIsModalVisible(false)}
         />
+      </Modal>
 
-        <Modal
-          visible={isModalVisible}
-          onRequestClose={() => setIsModalVisible(false)}
-          animationType="slide"
-          presentationStyle="pageSheet"
-        >
-          <CryptocoinDetailsModal
-            coin={selectedCoin}
-            onClose={() => setIsModalVisible(false)}
-          />
-        </Modal>
-
-      </View>
     </SafeAreaView>
   );
 }
